@@ -12,16 +12,39 @@ extractor.py - שליפת EXIF מתמונות
 """
 
 
+def dms_to_decimal(dms, ref):
+    if not dms or not ref:
+        return None
+
+    degrees = dms[0]
+    minutes = dms[1]
+    seconds = dms[2]
+    # to convert from degrees minutes and seconds to decimal float
+    decimal = degrees + (minutes / 60.0) + (seconds / 3600.0)
+
+    if ref in ['S', 'W']:
+        decimal = -decimal
+
+    return float(decimal)
+
+
 def has_gps(data: dict):
-    pass
+    return 'GPSInfo' in data and len(data['GPSInfo']) > 0
 
 
 def latitude(data: dict):
-    pass
+    if has_gps(data):
+        gps_info = data['GPSInfo']
+        return dms_to_decimal(gps_info.get(2), gps_info.get(1))
+    return None
 
 
 def longitude(data: dict):
-    pass
+    if has_gps(data):
+        gps_info = data['GPSInfo']
+        return dms_to_decimal(gps_info.get(4), gps_info.get(3))
+    return None
+
 
 def datatime(data: dict):
     date = data.get("DateTimeOriginal")
@@ -110,5 +133,6 @@ def extract_all(folder_path):
             all_data_list.append(extract_metadata(full_path))
 
     return all_data_list
+
 
 print(extract_all("/Users/danielkhabirkhanov/Study/KodKode/image_intel/image_intel_the_winning_team/images/ready"))
