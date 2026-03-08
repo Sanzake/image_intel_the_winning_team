@@ -134,5 +134,5 @@ def extract_all(folder_path):
 
     return all_data_list
 
-
-print(extract_all("/Users/danielkhabirkhanov/Study/KodKode/image_intel/image_intel_the_winning_team/images/ready"))
+# to test change to your local path
+# print(extract_all("/Users/danielkhabirkhanov/Study/KodKode/image_intel/image_intel_the_winning_team/images/ready"))
