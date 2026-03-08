@@ -24,15 +24,21 @@ def longitude(data: dict):
     pass
 
 def datatime(data: dict):
-    pass
+    date = data.get("DateTimeOriginal")
+
+    if date:
+        formatted_date = date.replace(':', '-', 2)
+        return formatted_date
 
 
 def camera_make(data: dict):
-    pass
+    make = data.get("Make")
+    return make
 
 
 def camera_model(data: dict):
-    pass
+    model = data.get("Model")
+    return model
 
 
 def extract_metadata(image_path):
@@ -95,4 +101,14 @@ def extract_all(folder_path):
     Returns:
         list של dicts (כמו extract_metadata)
     """
-    pass
+    all_data_list = []
+    files = os.listdir(folder_path)
+
+    for filename in files:
+        if filename.lower().endswith(('.jpg', '.jpeg')):
+            full_path = os.path.join(folder_path, filename)
+            all_data_list.append(extract_metadata(full_path))
+
+    return all_data_list
+
+print(extract_all("/Users/danielkhabirkhanov/Study/KodKode/image_intel/image_intel_the_winning_team/images/ready"))
