@@ -6,6 +6,14 @@ import folium
 
 
 def sort_by_time(arr):
+    """
+
+    Args:
+        arr: רשימת מילונים שמקבלים מאקסטרקתור
+
+    Returns: רשימה מסודרת לפי תאריכים וזמן
+
+    """
     return sorted(arr, key=lambda x: x["datetime"] if x["datetime"] else "")
 
 
@@ -40,8 +48,8 @@ def create_map(images_data):
 
 
 if __name__ == "__main__":
-    # יצירצ מפה fake_data
-    # לשנות למה שחוזר מextractor
+    # יצירצ מפה עם fake_data
+    # אחר כך נצתרך לשנות למה שחוזר מextractor
     # ועבר מיון דרך sort by time
     fake_data = [
         {"filename": "test1.jpg", "latitude": 32.0853, "longitude": 34.7818,
