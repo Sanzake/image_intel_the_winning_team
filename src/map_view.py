@@ -1,23 +1,12 @@
 """
 map_view.py - יצירת מפה אינטראקטיבית
-צוות 1, זוג B
-
-ראו docs/api_contract.md לפורמט הקלט והפלט.
-
-=== תיקונים ===
-1. חישוב מרכז המפה - היה עובר על images_data (כולל תמונות בלי GPS) במקום gps_image, נופל עם None
-2. הסרת CustomIcon שלא עובד (filename זה לא נתיב שהדפדפן מכיר)
-3. הסרת m.save() - לפי API contract צריך להחזיר HTML string, לא לשמור קובץ
-4. הסרת fake_data מגוף הקובץ - הועבר ל-if __name__
-5. תיקון color_index - היה מתקדם על כל תמונה במקום רק על מכשיר חדש
-6. הוספת מקרא מכשירים
 """
 
 import folium
 
 
 def sort_by_time(arr):
-    pass
+    return sorted(arr, key=lambda x: x["datetime"] if x["datetime"] else "")
 
 
 def create_map(images_data):
@@ -30,12 +19,30 @@ def create_map(images_data):
     Returns:
         string של HTML (המפה)
     """
-    pass
 
+    gps_images = [img for img in images_data if img["has_gps"]]
+
+    if not gps_images:
+        return "<h2>No GPS data found</h2>"
+
+    center_lat = sum(img["latitude"] for img in gps_images) / len(gps_images)
+    center_lon = sum(img["longitude"] for img in gps_images) / len(gps_images)
+
+    m = folium.Map(location=[center_lat, center_lon], zoom_start=8)
+
+    for img in gps_images:
+        folium.Marker(
+            location=[img["latitude"], img["longitude"]],
+            popup=f"name - {img['filename']}<br>date - {img['datetime']}<br>phone model - {img['camera_model']}",
+        ).add_to(m)
+
+    return m._repr_html_()
 
 
 if __name__ == "__main__":
-    # תיקון: fake_data הועבר לכאן מגוף הקובץ - כדי שלא ירוץ בכל import
+    # יצירצ מפה fake_data
+    # לשנות למה שחוזר מextractor
+    # ועבר מיון דרך sort by time
     fake_data = [
         {"filename": "test1.jpg", "latitude": 32.0853, "longitude": 34.7818,
          "has_gps": True, "camera_make": "Samsung", "camera_model": "Galaxy S23",
